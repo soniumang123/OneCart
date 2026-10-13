@@ -1,0 +1,24 @@
+import mongoose from "mongoose";
+
+const userschema = new mongoose.Schema({
+    name:{
+        type:String,
+        requiredL:true,
+    },
+    email:{
+        type:String,
+        required:true,
+        unique:true,
+    },
+    password:{
+        type:String,
+    },
+    cartData:{
+        type:Object,
+        default:{}
+    },
+},{timestamps:true, minimize:false})
+
+const User = mongoose.model("User", userschema)
+
+export default User;

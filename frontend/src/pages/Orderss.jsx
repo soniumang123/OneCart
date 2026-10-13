@@ -1,0 +1,82 @@
+import React, { useContext, useEffect, useState } from 'react'
+import Title from '../Components/Title.jsx'
+import { shopDataContext } from '../context/ShopContext.jsx'
+import { authDataContext } from '../context/AuthContext.jsx'
+import axios from 'axios'
+
+const Orderss = () => {
+    const [orderData, setOrderData] = useState([])
+    let {currency} = useContext(shopDataContext)
+    let{serverUrl} = useContext(authDataContext)
+
+    const loadOrderData = async()=>{
+        try {
+            const result = await axios.post(serverUrl + '/api/order/userorder' , {} , {withCredentials:true})
+            console.log(result.data)
+            if(result.data){
+                let allOrdersItem = []
+                result.data.map((order)=>{
+                    order.items.map((item)=>{
+                        item['status'] = order.status
+                        item['payment'] = order.payment
+                        item['paymentMethod'] = order.paymentMethod
+                        item['date'] = order.date
+                        allOrdersItem.push(item)
+                    })
+                })
+                setOrderData(allOrdersItem.reverse())
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    useEffect(()=>{
+        loadOrderData()
+    },[])
+  return (
+     <div className='w-full min-h-screen p-5 pb-38 overflow-hidden'>
+        <div className='h-[8%] w-full text-center mt-20'>
+            <Title text1={'MY '} text2={'ORDER'}/>
+        </div>
+        <div className='w-full h-[92%] flex flex-wrap gap-5'>
+            {
+                orderData.map((item,index)=>(
+                    <div key={index} className='w-full h-[10%] border-t border-b'>
+                        <div className='w-full h-[90%] flex items-start gap-6 bg-[#51808048] py-2.5 px-5 rounded-2xl relative flex-wrap'>
+                            <img src={item.image1} alt="" className='w-32 h-36 rounded-md'/>
+                            <div className='flex items-start justify-center flex-col gap-2'>
+                                <p className='md:text-[25px] text-[25px] text-[#f3f9fc]'>{item.name}</p>
+                                <div className='flex items-start justify-start gap-2 md:gap-5 '>
+                                <p className='md:text-[18px] text-[12px] text-[#aaf4e7]'>{currency}{item.price}</p>
+                                <p className='md:text-[18px] text-[12px] text-[#aaf4e7]'>Quantity : {item.quantity}</p>
+                                <p className='md:text-[18px] text-[12px] text-[#aaf4e7]'>Size : {item.size}</p>
+                            </div>
+                            <div className='flex items-center'>
+                                <p className='md:text-[18px] text-[12px] text-[#aaf4e7]'>Date : <span className='text-[#e4fbff] pl-2.5 md:text-[16px] text-[11px]'>
+                                    {new Date(item.date).toDateString()}</span></p>
+                            </div>
+                            <div className='flex items-center'>
+                                <p className='md:text-[18px] text-[12px] text-[#aaf4e7]'>Payment Method : {item.paymentMethod}</p>
+                            </div>
+                            <div className='absolute md:left-[55%] md:top-[47%] right-[10%] top-[10%]'>
+                                <div className='flex items-center gap-2 '>
+                                    <p className='min-w-2 h-2 rounded-full bg-green-500'></p>
+                                    <p className='md:text-[17px] text-[10px] text-[#f3f9fc]'>{item.status}</p>
+                                </div>
+                            </div>
+                            <div className='absolute md:right-[2%] md:top-[40%] right-[3%] top-[25%]'>
+                                <button className='bg-slate-500 rounded-md text-white p-3 cursor-pointer' onClick={loadOrderData}>Track Order</button>
+                            </div>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+  )
+}
+
+export default Orderss
