@@ -2,7 +2,7 @@ import React, { createContext } from 'react'
 
 
 export const authDataContext = createContext();
-let serverUrl = "http://localhost:8000"
+let serverUrl = "https://onecart-rvf9.onrender.com"
 
 const AuthContext = ({children}) => {
 
