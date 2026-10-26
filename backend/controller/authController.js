@@ -47,9 +47,23 @@ export const login = async(req,res)=>{
         let user = await User.findOne({
             email
         })
-        if(!user){
-            return res.status(404).json({message : "User not found"})
-        }
+        if (!user) {
+  return res.status(404).json({ message: "User not found" });
+}
+
+if (!user.password) {
+  return res.status(400).json({
+    message: "This account uses Google Login. Please sign in with Google.",
+  });
+}
+
+let isMatch = await bcrypt.compare(password, user.password);
+
+if (!isMatch) {
+  return res.status(400).json({
+    message: "Email or password is incorrect",
+  });
+}
 
         let isMatch = await bcrypt.compare(password,user.password)
 
