@@ -96,7 +96,7 @@ const Login = () => {
             )}
 
             <button className="w-full h-12.5 bg-[#6060f5] rounded-lg flex items-center justify-center mt-5 text-[17px] font-semibold">
-              {loading ? <Loading/> : Login}
+              {loading ? <Loading/> : "Login"}
             </button>
           </div>
         </form>
