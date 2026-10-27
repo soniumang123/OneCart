@@ -17,25 +17,27 @@ import { toast } from 'react-toastify'
 const Navbar = () => {
   const navigate = useNavigate();
 
-  let { userData, getCurrentUser } = useContext(userDataContext);
+  let { userData, setUserData } = useContext(userDataContext);
 
   const {showSearch, setShowSearch, search,setSearch , getCartCount} = useContext(shopDataContext);
   const [showProfile, setShowProfile] = useState(false);
   const {serverUrl} = useContext(authDataContext);
 
-  const handleLogout = async()=>{
-    try {
-        const result = await axios.get(serverUrl + "/api/auth/logout",{
-            withCredentials:true
-        })
-        console.log(result.data)
-        toast.success("Logout Success")
-        getCurrentUser();
-    } catch (error) {
-        console.log(error)
-        toast.error("Logout Failed")
-    }
+ const handleLogout = async () => {
+  try {
+    await axios.get(serverUrl + "/api/auth/logout", {
+      withCredentials: true,
+    });
+
+    setUserData(null);
+    setShowProfile(false);
+    toast.success("Logout Success");
+    navigate("/login");
+  } catch (error) {
+    console.log(error);
+    toast.error("Logout Failed");
   }
+};
   return (
    
       <div
@@ -129,7 +131,7 @@ const Navbar = () => {
               )}
               {userData && (
                 <li className="w-full hover:bg-[#2f2f2f] px-3.75 py-2.5 cursor-pointer text-gray-400"
-                onClick={()=>{handleLogout(); setShowProfile(false); navigate("/login")}}
+                onClick={()=>{handleLogout()}
                 >
                   LogOut
                 </li>
