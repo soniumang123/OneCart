@@ -131,7 +131,7 @@ const Navbar = () => {
               )}
               {userData && (
                 <li className="w-full hover:bg-[#2f2f2f] px-3.75 py-2.5 cursor-pointer text-gray-400"
-                onClick={()=>{handleLogout()}
+                onClick={handleLogout()}
                 >
                   LogOut
                 </li>
